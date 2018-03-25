@@ -1,13 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const articleSchema = new Schema({
-	nyt_id: { type: String, require: true },
+const ArticleSchema = new Schema({
   title: { type: String, required: true },
   date: { type: Date, required: true },
   url: { type: String, required: true }
 });
 
-const Article = mongoose.model("Article", articleSchema);
+const Articles = mongoose.model("Articles", ArticleSchema);
 
-module.exports = Article;
+module.exports = Articles;

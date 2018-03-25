@@ -1,18 +1,19 @@
 import axios from "axios"; 
-const BASEURL = "https://www.omdbapi.com/?t="; 
-const APIKEY = "&apikey=trilogy"; 
+const APIKEY = "1c700ade439d4f0c942f0f54cbed43f6"; 
+const BASEURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + APIKEY + "&q="; 
 
 export default {   
-  search: function(query) {     
-    return axios.get(BASEURL + query + APIKEY);   
+  search: function(search) {     
+    return axios.get(`${BASEURL}${search}`);   
   },
 
-  saveArticle: function(data) {
-    return axios({
-      method: 'post',
-      url: '/api/articles',
-      data: data
-    });
+  getArticles: function() {
+    return axios.get("/api/saved");
+  },
+
+  saveArticle: function(articleObj) {
+    console.log(articleObj);
+    return axios.post("/api/saved", articleObj);
   }
 };
 

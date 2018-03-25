@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import Header from "../components/Header";
-import { Input, SubmitBtn } from "../components/Search";
-import { Results, ResultsItem } from "../components/Results";
+import { Input } from "../components/Search";
+import { Results, ResultsItem, SaveBtn } from "../components/Results";
 import API from "../utils/API";
-import axios from 'axios';
+
 
 
 class Home extends Component {
@@ -14,18 +14,20 @@ class Home extends Component {
     end: ""
   };
 
-  // loadArticles = () => {
-  //   API.getArticles()
-  //     .then(res =>
-  //       this.setState({ articles: res.data, title: "", date: ""})
-  //     )
-  //     .catch(err => console.log(err));
-  // };
-
-  //   componentDidMount() {
-  // 	loadArticles();
-  // }
-
+  searchArticles = () => {
+  	let query = `${this.state.search}`;
+		API.search(query)
+    	.then(res => {
+    		console.log("res.data.response.docs: ", res.data.response.docs);
+    		this.setState({
+    			articles: res.data.response.docs,
+    			search: "",
+    			start: "",
+    			end: ""
+    		});
+    	})
+    	.catch(err => console.log(err));
+  };
 
   
   handleInputChange = (event) => {
@@ -35,47 +37,32 @@ class Home extends Component {
     });
   };
 
-  handleFormSubmit = (event) => {
+  handleFormSubmit = event => {
     event.preventDefault();
-    console.log('clicked');
-    axios.get("https://api.nytimes.com/svc/topstories/v2/home.json?api-key=1c700ade439d4f0c942f0f54cbed43f6")
-      // .then(response => this.setState({ articles: response.docs }))
-      // .then(res => console.log(res.data.results))
-      // .then(res => articles.push(res.data.results))
-      .then(res =>
-        this.setState({ articles: res.data.results, search: "", start: "", end: ""},
-        	function () {
-        		console.log(this.state.articles);
-        	}
-        )
-      )
-      .catch(err => console.log(err));
-      console.log('console logging: ' + this.state.articles);
+    if (this.state.search) {
+    	this.searchArticles();
+    }
   };
 
   // Saves a selected article to the database.
   handleSaveArticle = data => {
-    console.log('Saving article:',data);
-    const dbData = {
-      nyt_id: data._id,
-      headline: data.headline.main,
-      snippet: data.snippet,
-      web_url: data.web_url,
-      pub_date: data.pub_date
-    }
-    API.saveArticle(dbData)
-    .then(res=>{
-      this.loadSavedArticles();
-      // this.refs[savedpanel].scrollIntoView();
-      console.log('refs',this)
-    })
-    .catch(err=>console.log(err));
+    console.log('Saving article:', data);
+    API.saveArticle(data)
+    	.then(res=>{ 
+      	console.log("saved! ", data);
+    	})
+    	.catch(err => console.log("handleSaveArticle: ", err));
   };
 
 	render() {
 		return (	
 			<div>
 				<Header />
+				<div className="container">
+					<p>
+						Search the New York Times database for articles and save them for review at a later date.  Enter a search term and date range (optional) below to get started!
+    			</p>
+    		</div>
 				<div className="container">
 					<div className="row">
 						<form className="col s12">
@@ -107,22 +94,31 @@ class Home extends Component {
 						</form>
 					</div>
 				</div>
-				<div className="container">
+
 					{this.state.articles.length ? (
 						<Results>
-							{this.state.articles.map((article) => {
-								return (
-									<ResultsItem key={article.url}>
-										{article}
-
-									</ResultsItem>
-								)
-							})}
+							{this.state.articles.slice(0,30).map(article => (
+								<ResultsItem key={article._id}>
+									<div className="row">
+									<h5>
+									<a href={article.web_url}>
+										<strong>{article.headline.main}</strong>
+									</a>
+									</h5>
+									<SaveBtn style={{float: "right"}} className="btn btn-small" onClick={() => this.handleSaveArticle({
+										title: article.headline.main,
+										url: article.web_url,
+										date: article.pub_date
+									})} />
+									</div>
+								</ResultsItem>
+							))}
 						</Results>
 					) : (
-						<h3>No Results to Display</h3>
+						<div className="container">
+							<h3 style={{margin: "auto"}}>No Results to Display</h3>
+						</div>
 					)}
-				</div>
 			</div>
 		);
 	}

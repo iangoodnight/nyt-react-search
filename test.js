@@ -1,38 +1,56 @@
-const axios = require("axios");
-const request = require("request");
-// const apiUrl = "https://pokeapi.co/api/v2/pokemon/";
-const apiUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+const mongoose = require("mongoose");
+const db = require("./models");
+mongoose.Promise = global.Promise;
 
-  // Gets all books
-function getArticles() {
-    // return axios.get({
-    //   url: "https://api.nytimes.com/svc/search/v2/articlesearch.json",
-    //   qs: {
-    //     'api-key': "1c700ade439d4f0c942f0f54cbed43f6"
-    //     },
-    //   }, function(err, response, body) {
-    //   body = JSON.parse(body);
-    //   let results = [];
-    //   for (let i = 0; i < 10; i++) {
-    //     results.push(body.response.docs[i]);
-    //   }
-    //   return(results);
-    //   }
-    // );
-    axios.get(apiUrl + '?api-key' + '1c700ade439d4f0c942f0f54cbed43f6')
-      .then(function (response) {
-        // pokemonName.innerHTML = response.data.forms[0].name;
-        // pokemonImage.src = response.data.sprites.front_default;
-        console.log(response);
-      })
-      .catch(function (error) {
-        // pokemonName.innerHTML = "(An error has occurred.)";
-        // pokemonImage.src = "";
-        console.log(error);
-    });
+// This file empties the Books collection and inserts the books below
+
+mongoose.connect(
+  process.env.MONGODB_URI || "mongodb://localhost/nytreact",
+  {
+    // useMongoClient: true
   }
+);
 
+const articleSeed = [
+  {
+    title: "Mueller Subpoenas Trump Organization, Demanding Documents About Russia",
+    date: "MARCH 15, 2018",
+    url: "https://www.nytimes.com/2018/03/15/us/politics/trump-organization-subpoena-mueller-russia.html?hp&action=click&pgtype=Homepage&clickSource=story-heading&module=first-column-region&region=top-news&WT.nav=top-news"
+  },
+  {
+    title: "Trump Repeats His False Claim On Trade With Canada",
+    date: "MARCH 15, 2018 1:22PM ET",
+    url: "https://www.nytimes.com/2018/03/15/us/politics/trump-repeats-false-claim-about-canada-after-admitting-uncertainty-over-figure.html"
+      
+  },
+  {
+    title: "March Madness: Live Scores And Analysis",
+    date: "March 15, 2018",
+    url: "https://www.nytimes.com/2018/03/15/sports/march-madness-scores.html"
+  },
+  {
+    title: "Rising Seas Threaten the Ancient Monuments of Easter Island",
+    date: "March 15, 2018",
+    url: "https://www.nytimes.com/interactive/2018/03/14/climate/easter-island-erosion.html"
+      
+    
+  },
+  {
+    title: "U.S. Stayed Silent on Its Role in Another Firefight in Niger",
+    date: "March 15, 2018",
+    url: "https://www.nytimes.com/2018/03/14/world/africa/niger-green-berets-isis-firefight-december.html"
+      
+  }
+];
 
-
-
-getArticles();
+db.Article
+  .remove({})
+  .then(() => db.Article.collection.insertMany(articleSeed))
+  .then(data => {
+    console.log(data.insertedIds.length + " records inserted!");
+    process.exit(0);
+  })
+  .catch(err => {
+    console.error(err);
+    process.exit(1);
+});

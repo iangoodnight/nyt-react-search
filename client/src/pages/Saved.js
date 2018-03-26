@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Header from "../components/Header";
-import { Results, ResultsItem } from "../components/Results";
+import { Results, ResultsItem, DeleteBtn } from "../components/Results";
 import API from "../utils/API";
 
 
@@ -25,6 +25,12 @@ class Saved extends Component {
       .catch(err => console.log(err));
   };
 
+  deleteArticle = id => {
+  	API.deleteArticle(id)
+  		.then(res => this.loadArticles())
+  		.catch(err => console.log(err));
+  }
+
 	render() {
 		return (	
 			<div>
@@ -42,6 +48,7 @@ class Saved extends Component {
 										<strong>{article.title}</strong>
 									</a>
 									</h5>
+									<DeleteBtn style={{float: "right"}} className="btn btn-small" onClick={() => this.deleteArticle(article._id)} />
 									</div>
 								</ResultsItem>
 							))}

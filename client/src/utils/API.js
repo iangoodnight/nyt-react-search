@@ -14,6 +14,10 @@ export default {
   saveArticle: function(articleData) {
     console.log(articleData);
     return axios.post("/api/saved", articleData);
+  },
+
+  deleteArticle: function(id) {
+    return axios.delete("api/saved/" + id);
   }
 };
 

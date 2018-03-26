@@ -38,8 +38,8 @@ class Saved extends Component {
 								<ResultsItem key={article._id}>
 									<div className="row">
 									<h5>
-									<a href={article.web_url}>
-										<strong>{article.headline.main}</strong>
+									<a href={article.url}>
+										<strong>{article.title}</strong>
 									</a>
 									</h5>
 									</div>

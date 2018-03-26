@@ -36,23 +36,9 @@ mongoose.Promise = global.Promise;
 mongoose.connect(
   process.env.MONGODB_URI || "mongodb://localhost/nytreact",
   {
-    // useMongoClient: true
+    useMongoClient: true
   }
 );
-
-// Built by LucyBot. www.lucybot.com
-// request.get({
-//   url: "https://api.nytimes.com/svc/search/v2/articlesearch.json",
-//   qs: {
-//     'api-key': "1c700ade439d4f0c942f0f54cbed43f6"
-//   },
-// }, function(err, response, body) {
-//   body = JSON.parse(body);
-//   for (let i = 0; i < 10; i++) {
-//   	console.log(body.response.docs[i]);
-//   }
-//   console.log(body);
-// })
 
 app.listen(PORT, function() {
   console.log(`🌎 ==> Server now on port ${PORT}!`);

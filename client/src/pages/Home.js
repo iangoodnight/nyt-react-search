@@ -48,7 +48,7 @@ class Home extends Component {
   handleSaveArticle = data => {
     console.log('Saving article:', data);
     API.saveArticle(data)
-    	.then(res=>{ 
+    	.then(res => { 
       	console.log("saved! ", data);
     	})
     	.catch(err => console.log("handleSaveArticle: ", err));

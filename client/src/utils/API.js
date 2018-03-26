@@ -11,9 +11,9 @@ export default {
     return axios.get("/api/saved");
   },
 
-  saveArticle: function(articleObj) {
-    console.log(articleObj);
-    return axios.post("/api/saved", articleObj);
+  saveArticle: function(articleData) {
+    console.log(articleData);
+    return axios.post("/api/saved", articleData);
   }
 };
 

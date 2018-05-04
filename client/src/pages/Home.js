@@ -61,8 +61,8 @@ class Home extends Component {
 				<div className="container">
 					<p>
 						Search the New York Times database for articles and save them for review at a later date.  Enter a search term and date range (optional) below to get started!
-    			</p>
-    		</div>
+    				</p>
+    			</div>
 				<div className="container">
 					<div className="row">
 						<form className="col s12">
